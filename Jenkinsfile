@@ -6,9 +6,13 @@ node('ubuntu-us-appserver-2140-60')
         checkout scm
     }
 
-    stage('SNYK SCA TEST')
+    stage('SNYK SCA SAST TEST')
     {
-        echo 'SNYK SCA TEST PASS'
+        snykSecurity(
+            snykInstallation: 'Snyk',
+            snykTokenId: 'snyk_id',
+            severity: 'critical'
+        )
     }
 
     stage('Build-and-Tag')
