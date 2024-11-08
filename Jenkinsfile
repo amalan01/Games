@@ -15,6 +15,28 @@ node('ubuntu-us-appserver-2140-60')
         )
     }
 
+    stage('SonarQube Analysis')
+    {
+       agent
+        {
+            label 'ubuntu-us-appserver-2140-60'
+        }
+        steps
+        {
+            script
+            {
+               def scannerHome = tool 'SonarQubeScanner'
+               withSonarQubeEnv('sonarqube')
+                {
+                    sh "${scannerHome}/bin/sonar-scanner \
+                       -Dsonar.projectKey=gameapp \
+                       --Dsonar.sources=."
+                }
+            }
+        }
+    }
+    
+
     stage('Build-and-Tag')
     {
         app = docker.build('amalan06/sgameimg')
